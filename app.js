@@ -10,9 +10,6 @@ const cookieParser = require('cookie-parser')
 const ApiError = require('./utils/apiError')
 const errorController = require('./controller/errorController')
 const userRouter = require('./routes/userRouter')
-const tourRouter = require('./routes/tourRouter')
-const reviewRouter = require('./routes/reviewRouter')
-const viewRouter = require('./routes/viewRouter')
 const app = express()
 
 // set up pug engine
@@ -74,10 +71,10 @@ app.use(addTime)
 // })
 
 ///
-app.use('/', viewRouter)
-app.use('/api/v1/tours', tourRouter)
+// app.use('/', viewRouter)
+// app.use('/api/v1/tours', tourRouter)
 app.use('/api/v1/users', userRouter)
-app.use('/api/v1/reviews', reviewRouter)
+// app.use('/api/v1/reviews', reviewRouter)
 
 app.all('*', (req, res, next) => {
   // res.status(404).json({

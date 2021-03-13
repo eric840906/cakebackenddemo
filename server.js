@@ -3,7 +3,10 @@ const mongoose = require('mongoose')
 dotenv.config({ path: './config.env' })
 const app = require('./app')
 const DB = process.env.DATABASE.replace('<password>', process.env.PASSWORD)
-console.log(DB)
+if (process.env.NODE_ENV === 'development') {
+  console.log(DB)
+}
+
 mongoose
   .connect(DB, {
     useNewUrlParser: true,
