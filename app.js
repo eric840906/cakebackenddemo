@@ -10,12 +10,21 @@ const cookieParser = require('cookie-parser')
 const ApiError = require('./utils/apiError')
 const errorController = require('./controller/errorController')
 const userRouter = require('./routes/userRouter')
+const cors = require('cors')
 const app = express()
+
+const corsOptions = {
+  origin: 'http://localhost:8080',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  credentials: true
+}
 
 // set up pug engine
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
-
+app.use(cors(corsOptions))
 app.use(express.static(path.join(__dirname, 'public')))
 // set security http
 app.use(helmet())
@@ -73,7 +82,7 @@ app.use(addTime)
 ///
 // app.use('/', viewRouter)
 // app.use('/api/v1/tours', tourRouter)
-app.use('/api/v1/users', userRouter)
+app.use('/api/user', userRouter)
 // app.use('/api/v1/reviews', reviewRouter)
 
 app.all('*', (req, res, next) => {

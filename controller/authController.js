@@ -34,6 +34,7 @@ const createSendToken = (user, statusCode, res) => {
 }
 
 exports.signUp = catchAsync(async (req, res, next) => {
+  if (req.body.password !== req.body.passwordConfirm) return next(new ApiError('cannot confirm password', 400))
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
