@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
-const rateLimit = require('express-rate-limit')
+// const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const helmet = require('helmet')
@@ -10,11 +10,13 @@ const cookieParser = require('cookie-parser')
 const ApiError = require('./utils/apiError')
 const errorController = require('./controller/errorController')
 const userRouter = require('./routes/userRouter')
+const postRouter = require('./routes/postRouter')
+const postCommentRouter = require('./routes/postCommentRouter')
 const cors = require('cors')
 const app = express()
 
 const corsOptions = {
-  origin: 'http://localhost:8080',
+  origin: ['http://localhost:8080', 'http://192.168.100.5:8080'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -37,14 +39,14 @@ console.log(process.env.NODE_ENV)
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
-const limiter = rateLimit({
-  // maximum 100 request from same ip in an hour
-  max: 100,
-  windowMs: 60 * 60 * 1000,
-  message: 'too many request, rest for an hour'
-})
+// const limiter = rateLimit({
+//   // maximum 100 request from same ip in an hour
+//   max: 100,
+//   windowMs: 60 * 60 * 1000,
+//   message: 'too many request, rest for an hour'
+// })
 // limit request from same IP
-app.use('/api', limiter)
+// app.use('/api', limiter)
 // body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' })) // 將json轉成能用的物件
 // cookie parser
@@ -55,7 +57,7 @@ app.use(cookieParser())
 // data sanitization against noSQL query injection
 app.use(mongoSanitize())
 // data sanitization against XSS
-app.use(xss())
+app.use(xss('<script></script>'))
 // prevent parameter pollution
 app.use(
   hpp({
@@ -72,7 +74,7 @@ app.use(
 
 app.use(addTime)
 // app.get('/', (req, res) => {
-//   res.status(200).json({message: 'hello express', app: 'natours'})
+//   res.status(200).json({message: 'hello express', app: 'naposts'})
 // })
 
 // app.post('/', (req, res) => {
@@ -81,9 +83,9 @@ app.use(addTime)
 
 ///
 // app.use('/', viewRouter)
-// app.use('/api/v1/tours', tourRouter)
 app.use('/api/user', userRouter)
-// app.use('/api/v1/reviews', reviewRouter)
+app.use('/api/post', postRouter)
+app.use('/api/postcomment', postCommentRouter)
 
 app.all('*', (req, res, next) => {
   // res.status(404).json({

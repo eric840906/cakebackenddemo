@@ -9,7 +9,7 @@ exports.deleteOne = model =>
     if (!doc) return next(new ApiError('No document found with this ID', 404))
 
     res.status(204).json({
-      status: 'success',
+      state: 'success',
       data: null
     })
   })
@@ -20,7 +20,7 @@ exports.createOne = model =>
     if (!doc) return next(new ApiError('No document found with this ID', 404))
     res.status(201).json({
       status: 'success',
-      tour: doc
+      data: doc
     })
   })
 
@@ -37,7 +37,7 @@ exports.updateOne = model =>
       }
     )
     res.status(200).json({
-      status: 'success',
+      state: 'success',
       data: doc
     })
   })
@@ -50,7 +50,7 @@ exports.getOne = (model, populateOptions) =>
     if (populateOptions) query = query.populate(populateOptions) // adding populated enable a function to add actual user data into guides section according to IDs inside
     const doc = await query
     res.status(200).json({
-      status: 'success',
+      state: 'success',
       data: doc
     })
   })
@@ -69,7 +69,7 @@ exports.getAll = model =>
     // const doc = await features.query.explain()
     // const allTours = await Tour.find().where('difficulty').equals('easy').where('price').gte(500)
     res.status(200).json({
-      status: 'success',
+      state: 'success',
       results: doc.length,
       data: doc
     })

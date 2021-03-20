@@ -65,7 +65,7 @@ exports.updateMe = async (req, res, next) => {
     return next(new ApiError('this route is not for password update', 400))
   }
   // 2. filter unwanted fieldnames which are not allow to be updated
-  const filteredBody = filterObject(req.body, 'name', 'email') // only allow name and email to be updated
+  const filteredBody = filterObject(req.body, 'name', 'email', 'description', 'photo') // only allow name, email, photo and description to be updated
   if (req.file) filteredBody.photo = req.file.filename
   // 3. update user account
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
@@ -73,7 +73,7 @@ exports.updateMe = async (req, res, next) => {
     runValidators: true
   })
   res.status(200).json({
-    status: 'success',
+    state: 'success',
     data: {
       user: updatedUser
     }

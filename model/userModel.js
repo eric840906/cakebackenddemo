@@ -29,6 +29,9 @@ const userSchema = new mongoose.Schema({
     required: [true, 'password is required'],
     select: false
   },
+  description: {
+    type: String
+  },
   passwordConfirm: {
     type: String,
     required: [true, 'Please confirm your password'],
@@ -57,8 +60,8 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next() // if password not being modified, just go next step
   this.password = await bcrypt.hash(this.password, 12) // encrypt user password with bcrypt before saving
-  this.passwordConfirm = await bcrypt.hash(this.passwordConfirm, 12)
-  // this.passwordConfirm = undefined // only used for signing up, can be deleted after password validation
+  // this.passwordConfirm = await bcrypt.hash(this.passwordConfirm, 12)
+  this.passwordConfirm = undefined // only used for signing up, can be deleted after password validation
   next()
 })
 userSchema.pre('save', async function (next) {

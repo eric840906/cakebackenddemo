@@ -11,7 +11,7 @@ router.patch('/reset/:token', authController.resetPass)
 
 router.use(authController.protect) // protect everyroute after this middleware
 router.patch('/updatepass', authController.updatePass)
-router.patch('/updateme', userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateMe)
+router.patch('/updateme', userController.updateMe)
 router.delete('/deleteme', userController.deleteMe)
 
 router.get('/me', userController.getMe, userController.getUser)
