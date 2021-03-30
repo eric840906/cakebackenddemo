@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
+const compression = require('compression')
 // const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
@@ -72,7 +73,7 @@ app.use(
     ]
   })
 )
-
+app.use(compression())
 app.use(addTime)
 // app.get('/', (req, res) => {
 //   res.status(200).json({message: 'hello express', app: 'naposts'})
