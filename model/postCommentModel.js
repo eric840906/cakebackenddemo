@@ -7,17 +7,17 @@ const postCommentSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now()
+      default: Date.now
     },
     post: {
       type: mongoose.Schema.ObjectId,
       ref: 'Post',
-      required: [true, 'review must belong to a tour']
+      required: [true, 'comment must belong to a post']
     },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'review must belong to a user']
+      required: [true, 'comment must belong to a user']
     }
   },
   {

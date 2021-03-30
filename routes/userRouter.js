@@ -1,5 +1,6 @@
 const userController = require('../controller/userController')
 const authController = require('../controller/authController')
+const cartController = require('../controller/cartController')
 const router = require('express').Router()
 // const multer = require('multer')
 
@@ -15,6 +16,9 @@ router.patch('/updateme', userController.updateMe)
 router.delete('/deleteme', userController.deleteMe)
 
 router.get('/me', userController.getMe, userController.getUser)
+router.route('/cart')
+  .post(userController.getMe, cartController.addToCart)
+  .delete(userController.getMe, cartController.deleteProduct)
 
 router.use(authController.restriction('admin'))
 

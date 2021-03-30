@@ -51,19 +51,10 @@ exports.deletePost = handlerFactory.deleteOne(Post)
 exports.getPostStats = catchAsync(async (req, res, next) => {
   const stats = await Post.aggregate([
     {
-      $match: { ratingsAverage: { $gte: 4.5 } }
-    },
-    {
       $group: {
-        _id: { $toUpper: '$difficulty' },
-        numPosts: { $sum: 1 },
-        numRatings: { $sum: '$ratingsQuantity' },
-        avgRating: { $avg: '$ratingsAverage' },
-        avgPrice: { $avg: '$price' }
+        _id: '$category',
+        numPosts: { $sum: 1 }
       }
-    },
-    {
-      $sort: { avgPrice: -1 }
     }
     // {
     //   // $match: { _id: { $ne: 'EASY' } }  //$ne = no equal to

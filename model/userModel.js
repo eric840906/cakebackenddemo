@@ -2,61 +2,68 @@ const crypto = require('crypto')
 const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcryptjs')
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Please tell us your name!']
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: [true, 'email is required'],
-    lowercase: true,
-    validate: [validator.isEmail, 'invalid email']
-  },
-  photo: {
-    type: String,
-    default: 'default.jpg'
-  },
-  role: {
-    type: String,
-    enum: ['user', 'guide', 'lead-guide', 'admin'],
-    default: 'user'
-  },
-  password: {
-    type: String,
-    minlength: [8, 'password should have at least 8 characters'],
-    required: [true, 'password is required'],
-    select: false
-  },
-  description: {
-    type: String
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'Please confirm your password'],
-    validate: {
-      // This only works on CREATE and SAVE!!!
-      validator: function (val) {
-        return val === this.password
-      },
-      message: 'Passwords are not the same!'
+const cartSchema = require('./cartModel')
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Please tell us your name!']
     },
-    select: false
+    email: {
+      type: String,
+      unique: true,
+      required: [true, 'email is required'],
+      lowercase: true,
+      validate: [validator.isEmail, 'invalid email']
+    },
+    photo: {
+      type: String,
+      default: 'default.jpg'
+    },
+    role: {
+      type: String,
+      enum: ['user', 'guide', 'lead-guide', 'admin'],
+      default: 'user'
+    },
+    password: {
+      type: String,
+      minlength: [8, 'password should have at least 8 characters'],
+      required: [true, 'password is required'],
+      select: false
+    },
+    description: {
+      type: String
+    },
+    passwordConfirm: {
+      type: String,
+      required: [true, 'Please confirm your password'],
+      validate: {
+        // This only works on CREATE and SAVE!!!
+        validator: function (val) {
+          return val === this.password
+        },
+        message: 'Passwords are not the same!'
+      },
+      select: false
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    },
+    cart: [cartSchema],
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    active: {
+      type: Boolean,
+      default: true
+    }
   },
-  createdAt: {
-    type: Date,
-    default: Date.now()
-  },
-  passwordChangedAt: Date,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  active: {
-    type: Boolean,
-    default: true
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
-})
-
+)
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next() // if password not being modified, just go next step
   this.password = await bcrypt.hash(this.password, 12) // encrypt user password with bcrypt before saving
@@ -73,6 +80,16 @@ userSchema.pre('save', async function (next) {
 // only show active:true user
 userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } })
+  next()
+})
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'cart',
+    populate: {
+      path: 'product',
+      select: 'name images price discountPrice'
+    }
+  })
   next()
 })
 // instance method, available for all user document

@@ -10,13 +10,14 @@ const cookieParser = require('cookie-parser')
 const ApiError = require('./utils/apiError')
 const errorController = require('./controller/errorController')
 const userRouter = require('./routes/userRouter')
+const productRouter = require('./routes/productRouter')
 const postRouter = require('./routes/postRouter')
 const postCommentRouter = require('./routes/postCommentRouter')
 const cors = require('cors')
 const app = express()
 
 const corsOptions = {
-  origin: ['http://localhost:8080', 'http://192.168.100.5:8080'],
+  origin: ['http://localhost:8080', 'http://192.168.100.5:8080', 'http://127.0.0.1:5501'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -57,7 +58,7 @@ app.use(cookieParser())
 // data sanitization against noSQL query injection
 app.use(mongoSanitize())
 // data sanitization against XSS
-app.use(xss('<script></script>'))
+// app.use(xss())
 // prevent parameter pollution
 app.use(
   hpp({
@@ -83,9 +84,12 @@ app.use(addTime)
 
 ///
 // app.use('/', viewRouter)
-app.use('/api/user', userRouter)
+
 app.use('/api/post', postRouter)
+app.use(xss())
+app.use('/api/user', userRouter)
 app.use('/api/postcomment', postCommentRouter)
+app.use('/api/product', productRouter)
 
 app.all('*', (req, res, next) => {
   // res.status(404).json({

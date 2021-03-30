@@ -1,5 +1,6 @@
 const router = require('express').Router({ mergeParams: true }) // in order to access parameters from tourRouter
 const postCommentController = require('../controller/postCommentController')
+const { xssFilter } = require('../utils/xssfilter')
 const { protect, restriction } = require('../controller/authController')
 
 router.use(protect)
@@ -12,6 +13,7 @@ router
     postCommentController.createPostComment
   )
   .get(postCommentController.getAllPostComments)
+router.use(xssFilter)
 router
   .route('/:id')
   .get(postCommentController.getPostComment)

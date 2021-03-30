@@ -30,6 +30,14 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Share a photo with others']
     },
+    category: {
+      type: String,
+      enum: {
+        values: ['News', 'Cakes', 'Cookies', 'Tips', 'Other'],
+        message: 'only accept "News", "Cakes", "Cookies", "Tips" and "Other" as difficulty'
+      },
+      default: 'Other'
+    },
     images: {
       type: [String]
     },
@@ -59,7 +67,8 @@ const postSchema = new mongoose.Schema(
 postSchema.virtual('comments', {
   ref: 'PostComment',
   foreignField: 'post', // post IDs are stored in PostComment model's post field
-  localField: '_id'
+  localField: '_id',
+  options: { sort: { createdAt: -1 }, limit: 5 }
 })
 // document middleware, runs before .save() and .create()
 postSchema.pre('save', function (next) {
