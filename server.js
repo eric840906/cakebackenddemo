@@ -16,9 +16,9 @@ mongoose
   })
   .then(() => console.log('DATABASE CONNECTED'))
 
-const port = process.env.PORT || 3000
-const server = app.listen(port, '127.0.0.1', () => {
-  console.log(`listening to http://127.0.0.1:${port}/`)
+const PORT = process.env.PORT || 3000
+const server = app.listen(PORT, () => {
+  console.log(`listening on ${PORT}`)
 })
 
 // unhandled rejection handling
