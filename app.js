@@ -18,7 +18,7 @@ const cors = require('cors')
 const app = express()
 
 const corsOptions = {
-  origin: ['http://localhost:8080', 'http://192.168.100.5:8080', 'http://127.0.0.1:5501'],
+  origin: ['http://localhost:8080', 'http://192.168.100.5:8081', 'http://127.0.0.1:5501', 'https://eric840906.github.io/eCommerce'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
