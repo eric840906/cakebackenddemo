@@ -14,6 +14,7 @@ const userRouter = require('./routes/userRouter')
 const productRouter = require('./routes/productRouter')
 const postRouter = require('./routes/postRouter')
 const postCommentRouter = require('./routes/postCommentRouter')
+const reviewRouter = require('./routes/reviewRouter')
 const cors = require('cors')
 const app = express()
 
@@ -91,6 +92,7 @@ app.use(xss())
 app.use('/api/user', userRouter)
 app.use('/api/postcomment', postCommentRouter)
 app.use('/api/product', productRouter)
+app.use('/api/review', reviewRouter)
 
 app.all('*', (req, res, next) => {
   // res.status(404).json({

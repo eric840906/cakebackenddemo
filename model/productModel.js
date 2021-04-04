@@ -46,8 +46,18 @@ const productSchema = new mongoose.Schema(
       default: Date.now,
       select: false
     }
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 )
+
+productSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'product', // product IDs are stored in Review model's product field
+  localField: '_id'
+})
 
 const Product = mongoose.model('Product', productSchema)
 module.exports = Product
